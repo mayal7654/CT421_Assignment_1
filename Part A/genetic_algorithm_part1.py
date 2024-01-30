@@ -3,7 +3,6 @@ from math import isclose
 
 bit_string_num = 30
 max_iterations = 100
-fitness_average = 0
 
 # creating initial generation
 def create_initial_gen():
@@ -36,8 +35,9 @@ def crossover(individ1, individ2):
 # switches bits with a low probability
 def standard_mutatation(bit_string):
     i = randint(0, bit_string_num)
-    if rand() < 1.0/float(30):
-        bit_string[i] = 1 - bit_string[i]
+    # about a 1% chance of flipping the bit
+    if rand() < 0.01:
+        bit_string[i] = abs(1 - bit_string[i])
     return bit_string
 
 def check_fitness(scores, population, file, iter):
@@ -45,13 +45,15 @@ def check_fitness(scores, population, file, iter):
     for i in range(0, 100):
         scores.append(one_max_fitness(population[i]))
     fitness_average = sum(scores)/100
-    file.write("Iteration "+ str(iter) +": "+ str(fitness_average)+"\n")
+    file.write(str(fitness_average)+"\n")
     return scores
 
 def algorithm():
+    fitness_average = 0
     population = create_initial_gen()
     iter = 0
-    txt = open("part1_fitness_average.txt", "w")
+    txt = open("Part A/part1_fitness_average.txt", "w")
+
     #initial fitness average
     scores = []
     scores = check_fitness(scores, population, txt, iter)
@@ -60,7 +62,8 @@ def algorithm():
     while iter <= max_iterations and (isclose(fitness_average, 30.00) != True):
         iter+=1
         #select fitter individuals for reproduction
-        selected_fitter_individ = [tournament(100, population, scores, 5) for _ in range(0, 100)]
+        for i in range(0, 100):
+            selected_fitter_individ = [tournament(100, population, scores, 5)]
         new_gen = []
         for i in range(0, 99, 2):
             # recombine between individuals

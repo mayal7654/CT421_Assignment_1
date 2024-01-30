@@ -4,7 +4,6 @@ from math import isclose
 bit_string_num = 30
 target_string = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 max_iterations = 100
-fitness_average = 0
 
 # creating initial generation
 def create_initial_gen():
@@ -42,7 +41,8 @@ def crossover(individ1, individ2):
 # switches bits with a low probability
 def standard_mutatation(bit_string):
     i = randint(0, bit_string_num)
-    if rand() < 1.0/float(30):
+    # about a 1% chance of flipping the bit
+    if rand() < 0.01:
         bit_string[i] = 1 - bit_string[i]
     return bit_string
 
@@ -51,13 +51,15 @@ def check_fitness(scores, population, file, iter):
     for i in range(0, 100):
         scores.append(target_string_fitness(population[i]))
     fitness_average = sum(scores)/100
-    file.write("Iteration "+ str(iter) +": "+ str(fitness_average)+"\n")
+    file.write(str(fitness_average)+"\n")
     return scores
 
 def algorithm():
+    fitness_average = 0
     population = create_initial_gen()
     iter = 0
-    txt = open("part2_fitness_average.txt", "w")
+    txt = open("Part A/part2_fitness_average.txt", "w")
+    
     #initial fitness average
     scores = []
     scores = check_fitness(scores, population, txt, iter)

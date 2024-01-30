@@ -4,7 +4,6 @@ from math import isclose
 pop_num = 1000
 bit_string_num = 30
 max_iterations = 100
-fitness_average = 0
 
 # creating initial generation
 def create_initial_gen():
@@ -41,7 +40,8 @@ def crossover(individ1, individ2):
 # switches bits with a low probability
 def standard_mutatation(bit_string):
     i = randint(0, bit_string_num)
-    if rand() < 1.0/float(30):
+    # about a 1% chance of flipping the bit
+    if rand() < 0.01:
         bit_string[i] = 1 - bit_string[i]
     return bit_string
 
@@ -50,13 +50,15 @@ def check_fitness(scores, population, file, iter):
     for i in range(0, pop_num):
         scores.append(deceptive_landscape_fitness(population[i]))
     fitness_average = sum(scores)/pop_num
-    file.write("Iteration "+ str(iter) +": "+ str(fitness_average)+"\n")
+    file.write(str(fitness_average)+"\n")
     return scores
 
 def algorithm():
+    fitness_average = 0
     population = create_initial_gen()
     iter = 0
-    txt = open("part3_fitness_average.txt", "w")
+    txt = open("Part A/part3_fitness_average.txt", "w")
+    
     #initial fitness average
     scores = []
     scores = check_fitness(scores, population, txt, iter)
