@@ -31,18 +31,20 @@ def binpacking_fitness(integer_list, integer_list_num, items_weight, total_weigh
         # if the bin is overfilled, add a new bin and add the item to it
         if bin_weight[bin_number] > total_weight_per_bin:
             new_bin_num = bin_number+1
-            if (len(bin_weight) == new_bin_num):
-                bin_weight.append(new_bin)
+            add_to_new_bin(new_bin, new_bin_num, items_weight, i, bin_weight)
             bin_weight[new_bin_num-1] -= items_weight[i]
-            bin_weight[new_bin_num] += items_weight[i]
+
             # while the new bin is overfilled, add a new bin and add the item to it
             while (bin_weight[new_bin_num] > total_weight_per_bin):
                 bin_weight[new_bin_num] -= items_weight[i]
                 new_bin_num += 1
-                if (len(bin_weight) == new_bin_num):
-                    bin_weight.append(new_bin)
-                bin_weight[new_bin_num] += items_weight[i]
+                add_to_new_bin(new_bin, new_bin_num, items_weight, i, bin_weight)
     return len(bin_weight)
+
+def add_to_new_bin(new_bin, new_bin_num, items_weight, i, bin_weight):
+    if (len(bin_weight) == new_bin_num):
+                bin_weight.append(new_bin)
+    bin_weight[new_bin_num] += items_weight[i]
 
 # selecting new generation - tournament selection
 # returns best contender out of randomly selected bunch
